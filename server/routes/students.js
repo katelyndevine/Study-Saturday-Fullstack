@@ -1,11 +1,11 @@
-const router = require('express').Router();
-const { Student, Test } = require('../db/models');
+const router = require("express").Router();
+const { Student, Test } = require("../db/models");
 
 // GET /api/students
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const students = await Student.findAll({
-      include: Test
+      include: Test,
     });
     res.json(students);
   } catch (error) {
@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET /api/students/:id
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const student = await Student.findByPk(req.params.id);
     if (student) res.json(student);
@@ -25,17 +25,24 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // POST /api/students
-
+router.post("/", async (req, res, next) => {
+  try {
+    const newStudent = await Student.create(req.body);
+    res.status(201).json(newStudent);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // PUT /api/students/:id
-router.put('/:id', async (req, res, next) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const { firstName, lastName, email } = req.body;
     const student = await Student.findByPk(req.params.id);
     const updatedStudent = await student.update({
       firstName,
       lastName,
-      email
+      email,
     });
     res.json(updatedStudent);
   } catch (error) {
@@ -44,14 +51,14 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // DELETE /api/students/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     const student = await Student.findByPk(req.params.id);
     if (student) {
       await student.destroy();
-      res.sendStatus(204);
+      res.sendStatus(204); //its been deleted
     } else {
-      res.sendStatus(404);
+      res.sendStatus(404); //else student cant be found/deleted
     }
   } catch (error) {
     next(error);

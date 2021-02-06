@@ -1,8 +1,8 @@
-const router = require('express').Router();
-const { Student, Test } = require('../db/models');
+const router = require("express").Router();
+const { Student, Test } = require("../db/models");
 
 // GET /api/tests
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const tests = await Test.findAll();
     res.json(tests);
@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET /api/tests/passing
-router.get('/passing', async (req, res, next) => {
+router.get("/passing", async (req, res, next) => {
   try {
     const passingTests = await Test.getPassing();
     res.json(passingTests);
@@ -21,13 +21,14 @@ router.get('/passing', async (req, res, next) => {
   }
 });
 
+//find test by a certain subject
 // GET /api/tests/subjects/:subject
-router.get('/subjects/:subject', async (req, res, next) => {
+router.get("/subjects/:subject", async (req, res, next) => {
   try {
     const testsBySubject = await Test.findAll({
       where: {
-        subject: req.params.subject
-      }
+        subject: req.params.subject,
+      },
     });
     res.json(testsBySubject);
   } catch (error) {
@@ -36,7 +37,7 @@ router.get('/subjects/:subject', async (req, res, next) => {
 });
 
 // GET /api/tests/:id
-router.get('/:id', async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const test = await Test.findByPk(req.params.id);
     res.json(test);
@@ -45,12 +46,13 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+//set a
 // POST /api/tests/students/:studentId
-router.post('/students/:studentId', async (req, res, next) => {
+router.post("/students/:studentId", async (req, res, next) => {
   try {
     const student = await Student.findByPk(req.params.studentId);
     let test = await Test.create(req.body);
-    test = await test.setStudent(student);
+    test = await test.setStudent(student); //magic method
     res.status(201).json(test);
   } catch (error) {
     next(error);
@@ -58,7 +60,7 @@ router.post('/students/:studentId', async (req, res, next) => {
 });
 
 // DELETE /api/tests/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     const test = await Test.findByPk(req.params.id);
     if (test) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const avgGrade = (tests) => {
   return Math.round(
@@ -14,6 +14,7 @@ const SingleStudent = (props) => {
     <div>
       <h3>{student.fullName}</h3>
       {hasTests ? (
+        //divs don't show up in the DOM
         <React.Fragment>
           <h3>Average grade: {avgGrade(student.tests)}%</h3>
           <div>

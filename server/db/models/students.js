@@ -1,32 +1,32 @@
-'use strict';
+"use strict";
 
-const Sequelize = require('sequelize');
-const db = require('../db');
+const Sequelize = require("sequelize");
+const db = require("../db");
 
-const Student = db.define('student', {
+const Student = db.define("student", {
   firstName: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   lastName: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmail: true
-    }
+      isEmail: true,
+    },
   },
   fullName: {
     type: Sequelize.VIRTUAL,
     get() {
       return `${this.firstName} ${this.lastName}`;
-    }
-  }
+    },
+  },
 });
-
+//capitalize first letter of first/last name
 Student.beforeCreate((student) => {
   student.firstName = `${student.firstName[0].toUpperCase()}${student.firstName.slice(
     1
@@ -35,7 +35,7 @@ Student.beforeCreate((student) => {
     1
   )}`;
 });
-
+//instance methods to get initials
 Student.prototype.initials = function () {
   return `${this.firstName[0]} ${this.lastName[0]}`;
 };
