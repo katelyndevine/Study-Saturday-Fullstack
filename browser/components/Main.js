@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { Component } from "react";
+import axios from "axios";
 
-import StudentList from './StudentList.js';
-import SingleStudent from './SingleStudent.js';
+import StudentList from "./StudentList.js";
+import SingleStudent from "./SingleStudent.js";
+import NewStudentForm from "./NewStudentForm";
 
 export default class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
       students: [],
-      selectedStudent: {}
+      selectedStudent: {},
+      isDisplaying: false,
     };
+    this.addStudent = this.addStudent.bind(this);
   }
 
   componentDidMount() {
@@ -19,9 +22,9 @@ export default class Main extends Component {
 
   getStudents = async () => {
     try {
-      const { data: students } = await axios.get('/api/students');
+      const { data: students } = await axios.get("/api/students");
       this.setState({
-        students
+        students,
       });
     } catch (error) {
       console.error(error);
@@ -30,14 +33,29 @@ export default class Main extends Component {
 
   selectStudent = (student) => {
     return this.setState({
-      selectedStudent: student
+      selectedStudent: student,
     });
+  };
+
+  addStudent = (student) => {
+    const students = [...this.state.students];
+    students.push(student);
+    this.setState({ students });
+  };
+
+  toggle = () => {
+    this.setState({ isDisplaying: !this.state.isDisplaying });
   };
 
   render() {
     return (
       <div>
         <h1>Students</h1>
+        <button onClick={this.toggle}>Add New Student</button>
+        {this.state.isDisplaying ? (
+          <NewStudentForm addStudent={this.addStudent} />
+        ) : null}
+
         <table>
           <thead>
             <tr>
